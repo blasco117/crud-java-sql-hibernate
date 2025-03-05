@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- connection to database -->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost/</property> <!-- aqui falta agregar el nombre de la base de datos -->
+        <property name="connection.username"></property> <!-- aqui falta agregar el usuario y contraseña -->
+        <property name="connection.password"></property>
+
+        <!-- dialect -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <!-- show sql -->
+        <property name="show_sql">true</property>
+
+        <!-- update -->
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- mapped classes -->
+        <mapping class="model.Usuario"/>
+
+    </session-factory>
+</hibernate-configuration>
