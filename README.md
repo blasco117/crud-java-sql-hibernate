@@ -19,3 +19,7 @@ CREATE TABLE usuarios (
 -Configurar el archivo hibernate.cfg.xml:
 
 agregar al lado de la url de configuracion el nombre la base de datos creada y tambien agregar el nombre de usuario y contraseña.
+
+-connector mysql:
+
+para agregar el connector de sql , debe ir en caso de usar IntelliJ a project structure > modules y agregar el archivo JAR my-sql-connector que se encuentra en la carpeta lib del proyecto.
