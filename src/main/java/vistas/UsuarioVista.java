@@ -80,12 +80,12 @@ public class UsuarioVista {
 
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        //evento boton Nuevo usuario
+        //evento boton Nuevo
 
         btnAgregar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                formularioNuevoUsuario();
+                formularioUsuario(null);
             }
         });
 
@@ -98,7 +98,8 @@ public class UsuarioVista {
 
                if(!seleccionTabla) {
                    int idUsuario = (int) tablaUsuarios.getModel().getValueAt(tablaUsuarios.getSelectedRow(),0);
-                   formularioActualizarUsuario(idUsuario);
+                   Usuario usuarioSeleccionado = usuarioController.obtenerUsuario(idUsuario);
+                   formularioUsuario(usuarioSeleccionado);
                } else {
                    JOptionPane.showMessageDialog(frame,"Debe seleccionar un usuario");
                }
@@ -146,8 +147,15 @@ public class UsuarioVista {
         }
     }
 
-    private void formularioNuevoUsuario() {
-        JDialog formulario = new JDialog(frame, "Nuevo usuario", true);
+    private void formularioUsuario(Usuario u) {
+        JDialog formulario = new JDialog(frame,true);
+
+        if(u == null) {
+            formulario.setTitle("Nuevo usuario");
+        } else {
+            formulario.setTitle("Actualizar usuario");
+        }
+
         formulario.setSize(400,400);
         formulario.setLocationRelativeTo(frame);
         formulario.setResizable(false);
@@ -161,7 +169,7 @@ public class UsuarioVista {
         labelApellido.setBounds(20,60,100,25);
         JLabel labelCorreo = new JLabel("Correo:");
         labelCorreo.setBounds(20,100,100,25);
-        JLabel labelContrasena = new JLabel("Contrasena:");
+        JLabel labelContrasena = new JLabel("Contraseña:");
         labelContrasena.setBounds(20,140,100,25);
         JLabel labelDireccion = new JLabel("Direccion:");
         labelDireccion.setBounds(20,180,100,25);
@@ -181,101 +189,14 @@ public class UsuarioVista {
         JTextField txtTelefono = new JTextField();
         txtTelefono.setBounds(130,220,240,25);
 
-        //panels
-
-        panelFormulario.add(labelNombre);
-        panelFormulario.add(txtNombre);
-        panelFormulario.add(labelApellido);
-        panelFormulario.add(txtApellido);
-        panelFormulario.add(labelCorreo);
-        panelFormulario.add(txtCorreo);
-        panelFormulario.add(labelContrasena);
-        panelFormulario.add(txtContrasena);
-        panelFormulario.add(labelDireccion);
-        panelFormulario.add(txtDireccion);
-        panelFormulario.add(labelTelefono);
-        panelFormulario.add(txtTelefono);
-
-        JButton btnGuardar = new JButton("Guardar");
-        btnGuardar.setBounds((400 - 100) / 2, 280,100,30);
-        btnGuardar.setHorizontalAlignment(SwingConstants.CENTER);
-        btnGuardar.setVerticalAlignment(SwingConstants.CENTER);
-
-        panelFormulario.add(btnGuardar);
-
-        formulario.add(panelFormulario);
-
-        //evento boton Guardar
-
-        btnGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String nombre = txtNombre.getText();
-                String apellido = txtApellido.getText();
-                String correo = txtCorreo.getText();
-                String contrasena = txtContrasena.getText();
-                String direccion = txtDireccion.getText();
-                String telefono = txtTelefono.getText();
-
-                try {
-                    usuarioController.guardarUsuario(nombre, apellido, correo, contrasena, direccion, telefono);
-                    JOptionPane.showMessageDialog(formulario,"usuario creado con exito");
-                    formulario.dispose();
-                    tablaUsuarios.getSelectionModel().clearSelection();
-                    cargarUsuarios();
-                } catch (IllegalArgumentException ex) {
-                    JOptionPane.showMessageDialog(formulario,"Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        formulario.setVisible(true);
-
-    }
-
-    public void formularioActualizarUsuario(int idUsuario) {
-        Usuario u = usuarioController.obtenerUsuario(idUsuario);
-
-        JDialog formulario = new JDialog(frame, "Actualizar usuario", true);
-        formulario.setSize(400,400);
-        formulario.setLocationRelativeTo(frame);
-        formulario.setResizable(false);
-
-        JPanel panelFormulario = new JPanel();
-        panelFormulario.setLayout(null);
-
-        JLabel labelNombre = new JLabel("Nombre:");
-        labelNombre.setBounds(20,20,100,25);
-        JLabel labelApellido = new JLabel("Apellido:");
-        labelApellido.setBounds(20,60,100,25);
-        JLabel labelCorreo = new JLabel("Correo:");
-        labelCorreo.setBounds(20,100,100,25);
-        JLabel labelContrasena = new JLabel("Contrasena:");
-        labelContrasena.setBounds(20,140,100,25);
-        JLabel labelDireccion = new JLabel("Direccion:");
-        labelDireccion.setBounds(20,180,100,25);
-        JLabel labelTelefono = new JLabel("Telefono:");
-        labelTelefono.setBounds(20,220,100,25);
-
-        JTextField txtNombre = new JTextField();
-        txtNombre.setBounds(130,20,240,25);
-        JTextField txtApellido = new JTextField();
-        txtApellido.setBounds(130,60,240,25);
-        JTextField txtCorreo = new JTextField();
-        txtCorreo.setBounds(130,100,240,25);
-        JTextField txtContrasena = new JTextField();
-        txtContrasena.setBounds(130,140,240,25);
-        JTextField txtDireccion = new JTextField();
-        txtDireccion.setBounds(130,180,240,25);
-        JTextField txtTelefono = new JTextField();
-        txtTelefono.setBounds(130,220,240,25);
-
-        txtNombre.setText(u.getNombre());
-        txtApellido.setText(u.getApellido());
-        txtCorreo.setText(u.getCorreo());
-        txtContrasena.setText(u.getContrasena());
-        txtDireccion.setText(u.getDireccion());
-        txtTelefono.setText(u.getTelefono());
+        if(u != null) {
+            txtNombre.setText(u.getNombre());
+            txtApellido.setText(u.getApellido());
+            txtCorreo.setText(u.getCorreo());
+            txtContrasena.setText(u.getContrasena());
+            txtDireccion.setText(u.getDireccion());
+            txtTelefono.setText(u.getTelefono());
+        }
 
         //panels
 
@@ -294,8 +215,6 @@ public class UsuarioVista {
 
         JButton btnGuardar = new JButton("Guardar");
         btnGuardar.setBounds((400 - 100) / 2, 280,100,30);
-        btnGuardar.setHorizontalAlignment(SwingConstants.CENTER);
-        btnGuardar.setVerticalAlignment(SwingConstants.CENTER);
 
         panelFormulario.add(btnGuardar);
 
@@ -314,8 +233,13 @@ public class UsuarioVista {
                 String telefono = txtTelefono.getText();
 
                 try {
-                    usuarioController.actualizarUsuario(u.getUsuario_id(),nombre, apellido, correo, contrasena, direccion, telefono);
-                    JOptionPane.showMessageDialog(formulario,"usuario actualizado con exito");
+                    if(u == null) {
+                        usuarioController.guardarUsuario(nombre, apellido, correo, contrasena, direccion, telefono);
+                        JOptionPane.showMessageDialog(formulario,"usuario creado con exito");
+                    } else {
+                        usuarioController.actualizarUsuario(u.getUsuario_id(),nombre, apellido, correo, contrasena, direccion, telefono);
+                        JOptionPane.showMessageDialog(formulario,"usuario actualizado con exito");
+                    }
                     formulario.dispose();
                     tablaUsuarios.getSelectionModel().clearSelection();
                     cargarUsuarios();
